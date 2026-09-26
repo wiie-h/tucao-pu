@@ -1,0 +1,25 @@
+name = "tucao-pu"
+main = "dist/worker.js"
+compatibility_date = "2026-09-27"
+
+# 部署前会自动先跑构建（把 public/ 打包进去）
+[build]
+command = "node build.mjs"
+
+[observability]
+enabled = true
+
+# D1 数据库绑定。建库命令：npx wrangler d1 create tucao-pu
+# 建完把返回的 database_id 填到下面
+[[d1_databases]]
+binding = "DB"
+database_name = "tucao-pu"
+database_id = "把 D1 的 database_id 填在这里"
+
+[vars]
+SITE_NAME = "吐槽铺"
+CONTACT_EMAIL = ""
+# 下面两个是密码和随机盐，不要写在这个文件里，用 secret 设置：
+#   npx wrangler secret put ADMIN_PASSWORD
+#   npx wrangler secret put IP_SALT
+# 可选：REQUIRE_REVIEW = "1"  开启先审后发

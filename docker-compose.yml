@@ -1,0 +1,39 @@
+# 一台服务器上跑起整套：Node 应用 + Caddy（自动申请 HTTPS 证书）
+# 用法见 README.md「部署」一节
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      BASE_URL: https://${DOMAIN}
+      SITE_NAME: ${SITE_NAME:-吐槽铺}
+      CONTACT_EMAIL: ${CONTACT_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      IP_SALT: ${IP_SALT}
+      REQUIRE_REVIEW: ${REQUIRE_REVIEW:-0}
+    volumes:
+      - ./data:/data
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  caddy_data:
+  caddy_config:

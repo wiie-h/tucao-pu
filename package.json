@@ -1,0 +1,15 @@
+{
+  "name": "tucao-pu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "吐槽铺 —— 一个匿名吐槽的网站，含访问统计后台。零第三方依赖。",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "MIT"
+}

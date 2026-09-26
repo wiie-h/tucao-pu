@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#14110F" />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/admin.css" />
+<title>中控台 · 吐槽铺</title>
+</head>
+<body class="admin">
+
+<!-- ---------- 登录 ---------- -->
+<div id="loginView" hidden>
+  <form class="login" id="loginForm" autocomplete="on">
+    <div class="login__badge">吐</div>
+    <h1 class="login__title">吐槽铺 · 中控台</h1>
+    <p class="login__sub">只有站长能进。输入后台密码继续。</p>
+    <input class="ainput" type="password" id="pwd" name="password" placeholder="后台密码"
+           autocomplete="current-password" required />
+    <button class="abtn abtn--primary abtn--block" type="submit" id="loginBtn">进入中控台</button>
+    <p class="login__err" id="loginErr" hidden></p>
+    <p class="login__hint">密码在服务器启动时打印在终端里，或由环境变量 ADMIN_PASSWORD 设置。</p>
+  </form>
+</div>
+
+<!-- ---------- 中控台 ---------- -->
+<div id="dashView" hidden>
+  <header class="ahead">
+    <div class="ahead__brand">
+      <span class="ahead__badge">吐</span>
+      <span>
+        <strong>吐槽铺 · 中控台</strong>
+        <em id="lastUpdate">—</em>
+      </span>
+    </div>
+    <div class="ahead__right">
+      <span class="pill pill--live"><i class="dot"></i><b id="hOnline">0</b><span>人在线</span></span>
+      <label class="atoggle"><input type="checkbox" id="autoRefresh" checked /><span>自动刷新</span></label>
+      <button class="abtn abtn--ghost" id="refreshBtn" type="button">立即刷新</button>
+      <a class="abtn abtn--ghost" href="/" target="_blank" rel="noopener">看前台</a>
+      <button class="abtn abtn--ghost" id="logoutBtn" type="button">退出</button>
+    </div>
+  </header>
+
+  <main class="agrid">
+    <section class="kcards" id="kpiRow" aria-label="关键指标"></section>
+
+    <section class="acard acard--6">
+      <div class="acard__head">
+        <h2>近 24 小时访问</h2>
+        <span class="acard__hint">每小时页面浏览量</span>
+      </div>
+      <div class="chart" id="hourly"></div>
+    </section>
+
+    <section class="acard acard--6">
+      <div class="acard__head">
+        <h2>趋势</h2>
+        <div class="aseg" id="daysSeg">
+          <button class="aseg__i" data-days="7" type="button">7 天</button>
+          <button class="aseg__i is-on" data-days="14" type="button">14 天</button>
+          <button class="aseg__i" data-days="30" type="button">30 天</button>
+        </div>
+      </div>
+      <div class="chart" id="trend"></div>
+      <div class="legend">
+        <span><i style="background:#FF4D3D"></i>浏览量 PV</span>
+        <span><i style="background:#FFC93C"></i>独立访客 UV</span>
+        <span><i style="background:#35A17C"></i>新增吐槽</span>
+      </div>
+    </section>
+
+    <section class="acard acard--3">
+      <div class="acard__head"><h2>大家都在气什么</h2></div>
+      <div class="bars" id="moods"></div>
+    </section>
+
+    <section class="acard acard--3">
+      <div class="acard__head"><h2>访客从哪来</h2><span class="acard__hint">近 30 天</span></div>
+      <div class="bars" id="refs"></div>
+    </section>
+
+    <section class="acard acard--3">
+      <div class="acard__head"><h2>用什么设备</h2></div>
+      <div class="bars" id="devices"></div>
+    </section>
+
+    <section class="acard acard--3">
+      <div class="acard__head"><h2>用什么浏览器</h2></div>
+      <div class="bars" id="browsers"></div>
+    </section>
+
+    <section class="acard acard--6">
+      <div class="acard__head"><h2>被同感最多的吐槽</h2></div>
+      <div class="tops" id="topPosts"></div>
+    </section>
+
+    <section class="acard acard--6">
+      <div class="acard__head"><h2>实时访问流</h2><span class="acard__hint" id="eventHint">最近 60 条</span></div>
+      <div class="events" id="eventList"></div>
+    </section>
+
+    <section class="acard acard--12">
+      <div class="acard__head">
+        <h2>内容管理</h2>
+        <div class="acard__tools">
+          <div class="aseg" id="filterSeg">
+            <button class="aseg__i is-on" data-filter="all" type="button">全部</button>
+            <button class="aseg__i" data-filter="pending" type="button">待审 <b id="cPending">0</b></button>
+            <button class="aseg__i" data-filter="reported" type="button">被举报 <b id="cReports">0</b></button>
+            <button class="aseg__i" data-filter="hidden" type="button">已隐藏 <b id="cHidden">0</b></button>
+          </div>
+          <input class="ainput ainput--sm" type="search" id="postSearch" placeholder="搜索内容或昵称…" />
+          <a class="abtn abtn--ghost abtn--sm" href="/admin/api/export">导出 CSV</a>
+        </div>
+      </div>
+      <div class="posts" id="postList"></div>
+      <p class="alist__foot" id="postFoot"></p>
+    </section>
+
+    <section class="acard acard--12">
+      <div class="acard__head"><h2>举报处理</h2><span class="acard__hint">按时间倒序</span></div>
+      <div class="reports" id="reportList"></div>
+    </section>
+  </main>
+
+  <div class="atoast" id="atoast" hidden></div>
+</div>
+
+<!--{{BOOT}}-->
+<script src="/admin.js"></script>
+</body>
+</html>

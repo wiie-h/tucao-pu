@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#FBF3E4" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="alternate" type="application/rss+xml" title="吐槽铺 · 最新吐槽" href="/rss.xml" />
+<link rel="stylesheet" href="/styles.css" />
+<!--{{SEO}}-->
+</head>
+<body id="top">
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>欢迎光临吐槽铺</span><i>·</i>
+    <span>本店不收钱，只收坏情绪</span><i>·</i>
+    <span>24 小时营业，全年无休</span><i>·</i>
+    <span>吐槽不要钱，憋着才要命</span><i>·</i>
+    <span>今天的坏心情，免费</span><i>·</i>
+    <span>欢迎光临吐槽铺</span><i>·</i>
+    <span>本店不收钱，只收坏情绪</span><i>·</i>
+    <span>24 小时营业，全年无休</span><i>·</i>
+    <span>吐槽不要钱，憋着才要命</span><i>·</i>
+    <span>今天的坏心情，免费</span><i>·</i>
+  </div>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="brand__badge">吐</span>
+    <span class="brand__text">
+      <strong>吐槽铺</strong>
+      <em><i class="live"></i><span id="onlineLabel">营业中</span></em>
+    </span>
+  </a>
+  <div class="topbar__right">
+    <button class="icon-btn" id="soundBtn" type="button" title="音效开关" aria-label="音效开关">🔊</button>
+    <button class="btn btn--primary btn--sm" id="topWriteBtn" type="button">写一条</button>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <div class="hero__deco" aria-hidden="true">
+      <span style="--x:3%;  --y:18%; --d:0s;   --s:1.05">💢</span>
+      <span style="--x:93%; --y:10%; --d:.8s;  --s:.9">🔥</span>
+      <span style="--x:88%; --y:74%; --d:1.6s; --s:1.1">📌</span>
+      <span style="--x:7%;  --y:80%; --d:.4s;  --s:.95">💧</span>
+      <span style="--x:78%; --y:38%; --d:2.1s; --s:.8">✨</span>
+    </div>
+    <h1>有不爽的，<em>写下来</em>。</h1>
+    <p class="hero__sub">这里是吐槽铺，24 小时营业。写下今天让你堵心的那件事，然后选一个：<b>贴到墙上</b>，让路过的人一起点头；或者干脆<b>碎掉它</b>，当没发生过。</p>
+    <div class="hero__cta">
+      <button class="btn btn--primary btn--lg" type="button" data-scroll="#composer">开始吐槽</button>
+      <button class="btn btn--ghost btn--lg" type="button" data-scroll="#wall">先看看别人</button>
+    </div>
+  </section>
+
+  <section class="composer-wrap" id="composer">
+    <h2 class="sr-only">写一条吐槽</h2>
+    <div class="composer" id="composerCard">
+      <span class="tape tape--a" aria-hidden="true"></span>
+      <span class="tape tape--b" aria-hidden="true"></span>
+
+      <div class="composer__row">
+        <span class="field-label">现在的心情</span>
+        <div class="moods" id="moods" role="radiogroup" aria-label="心情"></div>
+      </div>
+
+      <div class="field">
+        <label class="sr-only" for="ta">吐槽内容</label>
+        <textarea id="ta" rows="5" maxlength="300" spellcheck="false"
+          placeholder="比如：开会两小时，结论是「下次再议」。"></textarea>
+        <div class="field__foot">
+          <button class="inspire" id="inspireBtn" type="button">🎲 想不出来？给我个灵感</button>
+          <span class="field__right">
+            <span class="hint">Ctrl + Enter 直接发布</span>
+            <span class="counter" id="counter">0 / 300</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="composer__row">
+        <span class="field-label">贴个标签 <i>最多 3 个</i></span>
+        <div class="tags" id="tags"></div>
+      </div>
+
+      <div class="composer__foot">
+        <div class="nick">
+          <span class="nick__label">匿名身份</span>
+          <span class="nick__name" id="nickName">暴躁的锅包肉</span>
+          <button class="nick__roll" id="rollBtn" type="button" title="换一个昵称" aria-label="换一个昵称">🎲</button>
+        </div>
+        <div class="composer__actions">
+          <button class="btn btn--ghost" id="shredBtn" type="button">碎掉它 💥</button>
+          <button class="btn btn--primary" id="postBtn" type="button">贴到墙上 📌</button>
+        </div>
+      </div>
+      <p class="composer__note">完全匿名，不用注册。请不要写别人的真实姓名、电话或住址 —— 这类内容会被系统拦下来。</p>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="本站数据">
+    <div class="stat"><span class="stat__k">现在在线</span><span class="stat__v" id="stOnline"><!--{{STAT_ONLINE}}--></span></div>
+    <div class="stat"><span class="stat__k">累计吐槽</span><span class="stat__v" id="stPosts"><!--{{STAT_POSTS}}--></span></div>
+    <div class="stat"><span class="stat__k">今日新增</span><span class="stat__v" id="stToday"><!--{{STAT_TODAY}}--></span></div>
+    <div class="stat"><span class="stat__k">累计碎掉</span><span class="stat__v" id="stShred"><!--{{STAT_SHREDS}}--></span></div>
+  </section>
+
+  <section class="wall" id="wall">
+    <div class="wall__head">
+      <h2>吐槽墙 <span class="wall__count" id="wallCount"><!--{{COUNT}}--> 条</span></h2>
+      <p class="wall__sub">别人的破烂事，说不定和你一模一样。点「同感」让他们知道不是一个人。</p>
+    </div>
+
+    <div class="toolbar">
+      <div class="filters" id="moodFilter" role="tablist" aria-label="按心情筛选"></div>
+      <div class="toolbar__right">
+        <div class="seg" id="sortSeg">
+          <button class="seg__i is-on" type="button" data-sort="new">最新</button>
+          <button class="seg__i" type="button" data-sort="hot">最热</button>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="onlyMine" />
+          <span>只看我的</span>
+        </label>
+        <div class="search">
+          <span class="search__icon" aria-hidden="true">🔍</span>
+          <input type="search" id="search" placeholder="搜一搜吐槽…" aria-label="搜索吐槽" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wall__list" id="wallList">
+<!--{{WALL}}-->
+    </div>
+
+    <div class="empty" id="empty" hidden>
+      <span class="empty__icon">🗑️</span>
+      <p class="empty__title">这里空空的</p>
+      <p class="empty__sub">换个条件看看，或者你先来一条。</p>
+    </div>
+
+    <p class="wall__more"><button class="btn btn--ghost" id="loadMoreBtn" type="button" hidden>看更早的吐槽</button></p>
+  </section>
+</main>
+
+<footer class="footer">
+  <p class="footer__big">本店不提供解决方案，只提供一个垃圾桶。</p>
+  <nav class="footer__nav">
+    <a href="/">吐槽墙</a>
+    <a href="/about">关于本站</a>
+    <a href="/about#privacy">隐私说明</a>
+    <a href="/about#rules">内容规范</a>
+    <a href="/rss.xml">RSS 订阅</a>
+  </nav>
+  <p class="footer__small">
+    本站内容由网友匿名发布，不代表本站观点。你看到的每一条都来自真实的人。遇到不合适的内容可以点 🚩 举报。
+  </p>
+  <p class="footer__small footer__tiny">© <span id="year">2026</span> 吐槽铺 · 数据统计不含爬虫</p>
+</footer>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-label="碎掉这条吐槽">
+    <div class="shred__stage" id="shredStage">
+      <div class="shred__paper" id="shredPaper"></div>
+    </div>
+
+    <div id="shredConfirm">
+      <p class="shred__q">确认要碎掉吗？它不会出现在墙上，也不会被保存 —— 我们只记一个数字。</p>
+      <div class="shred__acts">
+        <button class="btn btn--ghost" type="button" data-close>算了，我收回</button>
+        <button class="btn btn--danger" id="doShred" type="button">碎掉它 💥</button>
+      </div>
+    </div>
+
+    <div id="shredDone" hidden>
+      <p class="shred__done">碎了。</p>
+      <p class="shred__doneSub" id="shredDoneSub">就当没发生过。</p>
+      <div class="shred__acts">
+        <button class="btn btn--ghost" type="button" data-close>好多了</button>
+        <button class="btn btn--primary" id="againBtn" type="button">再写一条</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="report" id="reportBox" hidden>
+  <div class="report__panel" role="dialog" aria-modal="true" aria-label="举报这条吐槽">
+    <p class="report__title">举报这条吐槽</p>
+    <p class="report__sub">告诉站长哪里有问题，我们会尽快处理。</p>
+    <div class="report__reasons" id="reportReasons"></div>
+    <div class="report__acts">
+      <button class="btn btn--ghost" type="button" data-close>取消</button>
+      <button class="btn btn--danger" id="doReport" type="button">提交举报</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<noscript>
+  <p style="padding:20px;text-align:center">吐槽铺需要开启 JavaScript 才能发帖和互动。不过你仍然可以浏览上面的吐槽墙。</p>
+</noscript>
+
+<!--{{BOOT}}-->
+<script src="/render.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

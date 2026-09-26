@@ -1,3 +1,10 @@
+# 数据库和运行数据（不进版本库）
 data/
+
+# 环境变量里放着后台密码，千万不要提交
 .env
+
 node_modules/
+npm-debug.log*
+.DS_Store
+Thumbs.db

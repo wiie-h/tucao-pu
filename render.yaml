@@ -1,0 +1,33 @@
+# ============================================================
+# 吐槽铺 · Render 一键部署配置
+# 放在项目根目录，Render 会读取它自动建好服务、磁盘和环境变量
+# ============================================================
+
+services:
+  - type: web
+    name: tucao-pu                     # 网址会是 https://tucao-pu.onrender.com
+    runtime: node
+    plan: 0.5c-512mb                   # $7/月。免费实例不能挂磁盘，数据会丢
+    region: singapore                  # 离国内最近的节点
+    branch: main
+    buildCommand: npm install --no-audit --no-fund
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: DATA_DIR
+        value: /data
+      # 如果 Render 给你的网址不是 tucao-pu.onrender.com，改这一行即可
+      - key: BASE_URL
+        value: https://tucao-pu.onrender.com
+      - key: SITE_NAME
+        value: 吐槽铺
+      # 下面两个由 Render 自动生成随机值，部署完在 Environment 里能看到
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: IP_SALT
+        generateValue: true
+    disk:
+      name: tucao-data
+      mountPath: /data
+      sizeGB: 1

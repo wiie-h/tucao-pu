@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#FBF3E4" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/styles.css" />
+<!--{{SEO}}-->
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="brand__badge">吐</span>
+    <span class="brand__text">
+      <strong>吐槽铺</strong>
+      <em><i class="live"></i><span id="onlineLabel">营业中</span></em>
+    </span>
+  </a>
+  <div class="topbar__right">
+    <button class="icon-btn" id="soundBtn" type="button" title="音效开关" aria-label="音效开关">🔊</button>
+    <a class="btn btn--primary btn--sm" href="/#composer">我也要吐槽</a>
+  </div>
+</header>
+
+<main class="page">
+  <nav class="crumbs"><a href="/">吐槽墙</a><span>/</span><b>这条吐槽</b></nav>
+
+  <article class="single">
+    <h1 class="single__h1"><!--{{TEXT}}--></h1>
+    <p class="single__meta">
+      <span><!--{{MOOD}}--></span>
+      <span>·</span>
+      <span><!--{{NICK}}--></span>
+      <span>·</span>
+      <time><!--{{DATE}}--></time>
+      <span>·</span>
+      <span>🙋 同感 <!--{{LIKES}}--></span>
+      <span>·</span>
+      <span>💬 回复 <!--{{REPLIES}}--></span>
+    </p>
+
+    <div class="wall__list single__list" id="wallList">
+<!--{{POST}}-->
+    </div>
+
+    <div class="single__cta">
+      <p class="single__ctaTitle">你也有一肚子话没处说？</p>
+      <p class="single__ctaSub">吐槽铺 24 小时营业，不用注册，写完还能选择「碎掉它」。</p>
+      <a class="btn btn--primary btn--lg" href="/#composer">去写一条</a>
+    </div>
+  </article>
+</main>
+
+<footer class="footer">
+  <p class="footer__big">本店不提供解决方案，只提供一个垃圾桶。</p>
+  <nav class="footer__nav">
+    <a href="/">吐槽墙</a>
+    <a href="/about">关于本站</a>
+    <a href="/about#privacy">隐私说明</a>
+    <a href="/about#rules">内容规范</a>
+    <a href="/rss.xml">RSS 订阅</a>
+  </nav>
+  <p class="footer__tiny">© <span id="year">2026</span> 吐槽铺</p>
+</footer>
+
+<div class="report" id="reportBox" hidden>
+  <div class="report__panel" role="dialog" aria-modal="true" aria-label="举报这条吐槽">
+    <p class="report__title">举报这条吐槽</p>
+    <p class="report__sub">告诉站长哪里有问题，我们会尽快处理。</p>
+    <div class="report__reasons" id="reportReasons"></div>
+    <div class="report__acts">
+      <button class="btn btn--ghost" type="button" data-close>取消</button>
+      <button class="btn btn--danger" id="doReport" type="button">提交举报</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!--{{BOOT}}-->
+<script src="/render.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
