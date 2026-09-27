@@ -1,0 +1,54 @@
+<view class="page-wrap">
+  <view wx:if="{{loading}}" class="muted loading">加载中…</view>
+
+  <block wx:elif="{{post}}">
+    <view class="note" style="background:{{post.noteColor}};color:{{post.inkColor}}">
+      <view class="note-head">
+        <text class="note-mood">{{post.emoji}} {{post.moodLabel}}</text>
+        <text class="note-time">{{post.timeText}}</text>
+      </view>
+      <view class="note-text">{{post.text}}</view>
+      <view class="note-tags" wx:if="{{post.tags.length}}">
+        <text wx:for="{{post.tags}}" wx:for-item="t" wx:key="*this" class="note-tag">#{{t}}</text>
+      </view>
+      <view class="note-foot">
+        <text class="note-nick">{{post.nickname}}{{post.mine ? ' · 我的' : ''}}</text>
+        <view class="note-acts">
+          <view class="act {{post.liked ? 'act-on' : ''}}" bindtap="tapLike">🙋 同感 {{post.likes}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="ops">
+      <view class="op" bindtap="report">🚩 举报这条</view>
+      <view wx:if="{{post.mine}}" class="op" bindtap="remove">✕ 删掉这条</view>
+    </view>
+
+    <view class="card replies-card">
+      <view class="label">接一句（{{post.replyCount}}）</view>
+      <view wx:if="{{!post.replyCount}}" class="muted">还没有人接话，你可以是第一个。</view>
+      <view wx:for="{{post.replies}}" wx:key="_id" class="reply">
+        <view class="reply-meta">{{item.nickname}}</view>
+        <view>{{item.text}}</view>
+      </view>
+
+      <view class="reply-form">
+        <input
+          class="reply-input"
+          value="{{replyText}}"
+          maxlength="120"
+          placeholder="接一句…"
+          bindinput="onReplyInput"
+          confirm-type="send"
+          bindconfirm="sendReply"
+        />
+        <button class="btn btn-primary send" hover-class="btn-hover" bindtap="sendReply">发</button>
+      </view>
+    </view>
+  </block>
+
+  <view wx:else class="empty">
+    <view class="empty-icon">🧻</view>
+    <view>这条吐槽已经不在了</view>
+  </view>
+</view>

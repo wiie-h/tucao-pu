@@ -1,0 +1,30 @@
+{
+  "pages": [
+    "pages/wall/wall",
+    "pages/write/write",
+    "pages/detail/detail",
+    "pages/mine/mine"
+  ],
+  "window": {
+    "navigationBarTitleText": "吐槽铺",
+    "navigationBarBackgroundColor": "#FBF3E4",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FBF3E4",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#8C8178",
+    "selectedColor": "#FF4D3D",
+    "backgroundColor": "#FFFCF6",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/wall/wall", "text": "吐槽墙" },
+      { "pagePath": "pages/write/write", "text": "写一条" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

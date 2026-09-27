@@ -1,0 +1,64 @@
+<view class="page-wrap">
+  <view class="card me">
+    <view class="me-row">
+      <view class="grow">
+        <view class="muted">当前匿名身份</view>
+        <view class="me-nick">{{nickname}}</view>
+      </view>
+      <view class="roll-btn" bindtap="rollNickname">🎲 换一个</view>
+    </view>
+    <view class="muted me-tip">这个身份只存在你的手机里，换设备就是另一个人。</view>
+  </view>
+
+  <view class="stats">
+    <view class="stat">
+      <text class="stat-num">{{posts.length}}</text>
+      <text class="stat-key">我的吐槽</text>
+    </view>
+    <view class="stat">
+      <text class="stat-num">{{myLikes}}</text>
+      <text class="stat-key">被同感</text>
+    </view>
+    <view class="stat">
+      <text class="stat-num">{{stats.posts}}</text>
+      <text class="stat-key">全站吐槽</text>
+    </view>
+    <view class="stat">
+      <text class="stat-num">{{stats.shreds}}</text>
+      <text class="stat-key">全站碎掉</text>
+    </view>
+  </view>
+
+  <view class="label">我贴过的</view>
+
+  <view wx:if="{{!posts.length && !loading}}" class="empty">
+    <view class="empty-icon">📌</view>
+    <view>你还没在墙上贴过东西</view>
+    <button class="btn btn-primary go" hover-class="btn-hover" bindtap="goWrite">去写一条</button>
+  </view>
+
+  <view
+    wx:for="{{posts}}"
+    wx:key="_id"
+    class="note"
+    style="background:{{item.noteColor}};color:{{item.inkColor}}"
+    data-id="{{item._id}}"
+    bindtap="tapPost"
+  >
+    <view class="note-head">
+      <text class="note-mood">{{item.emoji}} {{item.moodLabel}}</text>
+      <text class="note-time">{{item.timeText}}</text>
+    </view>
+    <view class="note-text">{{item.text}}</view>
+    <view class="note-foot">
+      <text class="note-nick">🙋 {{item.likes}} · 💬 {{item.replyCount}}</text>
+      <view class="act" data-id="{{item._id}}" catchtap="remove">删掉</view>
+    </view>
+  </view>
+
+  <view class="card about">
+    <view class="about-title">关于吐槽铺</view>
+    <view class="muted">一个可以匿名吐槽的地方。本店不提供解决方案，只提供一个垃圾桶。</view>
+    <view class="muted">「碎掉」的内容一个字都不会上传，服务器只记一个数字。</view>
+  </view>
+</view>

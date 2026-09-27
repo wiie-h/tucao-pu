@@ -1,0 +1,19 @@
+{
+  "description": "吐槽铺 · 微信小程序（云开发版）",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "compileType": "miniprogram",
+  "appid": "在这里填你自己的小程序 AppID",
+  "projectname": "tucao-pu",
+  "libVersion": "3.5.0",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "nodeModules": false
+  },
+  "condition": {}
+}

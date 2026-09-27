@@ -1,0 +1,82 @@
+<view class="page-wrap">
+  <view class="card">
+    <!-- 心情 -->
+    <view class="label">现在的心情</view>
+    <view class="chips">
+      <view
+        wx:for="{{moods}}"
+        wx:key="id"
+        class="chip {{mood === item.id ? 'chip-mood-on' : ''}}"
+        style="{{mood === item.id ? 'background:' + item.note + ';color:' + item.ink + ';border-color:' + item.line : ''}}"
+        data-id="{{item.id}}"
+        bindtap="pickMood"
+      >{{item.emoji}} {{item.label}}</view>
+    </view>
+
+    <!-- 正文 -->
+    <textarea
+      class="ta"
+      value="{{text}}"
+      maxlength="{{maxLen}}"
+      placeholder="{{placeholder}}"
+      placeholder-class="ta-ph"
+      bindinput="onInput"
+      auto-height
+      show-confirm-bar="{{false}}"
+    ></textarea>
+    <view class="counter">
+      <text class="inspire" bindtap="rollPlaceholder">🎲 换个灵感</text>
+      <text class="{{len > maxLen - 40 ? 'warn' : 'muted'}}">{{len}} / {{maxLen}}</text>
+    </view>
+
+    <!-- 标签 -->
+    <view class="label">贴个标签 <text class="muted">最多 3 个</text></view>
+    <view class="chips">
+      <view
+        wx:for="{{tags}}"
+        wx:key="*this"
+        class="chip {{picked.indexOf(item) > -1 ? 'chip-on' : ''}}"
+        data-tag="{{item}}"
+        bindtap="toggleTag"
+      >{{item}}</view>
+    </view>
+
+    <!-- 身份 -->
+    <view class="nick-row">
+      <text class="muted">匿名身份</text>
+      <text class="nick">{{nickname}}</text>
+      <text class="roll" bindtap="rollNickname">🎲</text>
+    </view>
+
+    <view class="acts">
+      <button class="btn btn-ghost half" hover-class="btn-hover" bindtap="openShred">碎掉它 💥</button>
+      <button class="btn btn-primary half" hover-class="btn-hover" bindtap="publish">贴到墙上 📌</button>
+    </view>
+
+    <view class="muted tip">完全匿名，不用注册。请不要写别人的真实姓名、电话或住址，这类内容会被系统拦下来。</view>
+  </view>
+</view>
+
+<!-- 碎纸弹层 -->
+<view class="mask" wx:if="{{showShred}}">
+  <view class="shred-box">
+    <view class="shred-paper {{shredDone ? 'paper-gone' : ''}}">{{shredText}}</view>
+
+    <block wx:if="{{!shredDone}}">
+      <view class="shred-q">确认要碎掉吗？它不会出现在墙上，也不会被保存——服务器只收到「碎掉了几个字」。</view>
+      <view class="acts">
+        <button class="btn btn-ghost half" hover-class="btn-hover" bindtap="cancelShred">算了，我收回</button>
+        <button class="btn btn-danger half" hover-class="btn-hover" bindtap="doShred">碎掉它 💥</button>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="shred-done">碎了。</view>
+      <view class="shred-sub">就当没发生过 —— 那口气我们替你回收了。</view>
+      <view class="acts">
+        <button class="btn btn-ghost half" hover-class="btn-hover" bindtap="closeShred">好多了</button>
+        <button class="btn btn-primary half" hover-class="btn-hover" bindtap="closeShred">再写一条</button>
+      </view>
+    </block>
+  </view>
+</view>

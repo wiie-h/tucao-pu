@@ -1,0 +1,72 @@
+<view class="marquee">欢迎光临吐槽铺 · 本店不收钱，只收坏情绪 · 24 小时营业</view>
+
+<view class="page-wrap">
+  <!-- 数据条 -->
+  <view class="stats">
+    <view class="stat">
+      <text class="stat-num">{{stats.posts}}</text>
+      <text class="stat-key">累计吐槽</text>
+    </view>
+    <view class="stat">
+      <text class="stat-num">{{stats.postsToday}}</text>
+      <text class="stat-key">今天新增</text>
+    </view>
+    <view class="stat">
+      <text class="stat-num">{{stats.shreds}}</text>
+      <text class="stat-key">累计碎掉</text>
+    </view>
+  </view>
+
+  <!-- 筛选 -->
+  <scroll-view scroll-x class="filter-bar" enable-flex>
+    <view
+      wx:for="{{moods}}"
+      wx:key="id"
+      class="chip {{mood === item.id ? 'chip-on' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="pickMood"
+    >{{item.emoji}} {{item.label}}</view>
+  </scroll-view>
+
+  <view class="sort-row">
+    <view class="sort-item {{sort === 'new' ? 'sort-on' : ''}}" data-sort="new" bindtap="pickSort">最新</view>
+    <view class="sort-item {{sort === 'hot' ? 'sort-on' : ''}}" data-sort="hot" bindtap="pickSort">最热</view>
+    <view class="grow"></view>
+    <view class="write-link" bindtap="goWrite">写一条 +</view>
+  </view>
+
+  <!-- 便利贴列表 -->
+  <view wx:if="{{posts.length === 0 && !loading}}" class="empty">
+    <view class="empty-icon">🗑️</view>
+    <view>这里空空的</view>
+    <view class="muted">换个心情看看，或者你先来一条</view>
+  </view>
+
+  <view
+    wx:for="{{posts}}"
+    wx:key="_id"
+    class="note"
+    style="background:{{item.noteColor}};color:{{item.inkColor}}"
+    data-id="{{item._id}}"
+    bindtap="tapPost"
+  >
+    <view class="note-head">
+      <text class="note-mood">{{item.emoji}} {{item.moodLabel}}</text>
+      <text class="note-time">{{item.timeText}}</text>
+    </view>
+    <view class="note-text">{{item.text}}</view>
+    <view class="note-tags" wx:if="{{item.tags.length}}">
+      <text wx:for="{{item.tags}}" wx:for-item="t" wx:key="*this" class="note-tag">#{{t}}</text>
+    </view>
+    <view class="note-foot">
+      <text class="note-nick">{{item.nickname}}{{item.mine ? ' · 我的' : ''}}</text>
+      <view class="note-acts">
+        <view class="act {{item.liked ? 'act-on' : ''}}" data-id="{{item._id}}" catchtap="tapLike">🙋 同感 {{item.likes}}</view>
+        <view class="act">💬 {{item.replyCount}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading muted">正在翻墙上的便利贴…</view>
+  <view wx:elif="{{posts.length && !hasMore}}" class="loading muted">到底了，去写一条吧</view>
+</view>

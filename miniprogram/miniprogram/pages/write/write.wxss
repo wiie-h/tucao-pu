@@ -1,0 +1,85 @@
+.label { font-size: 25rpx; color: #8C8178; margin: 8rpx 0 16rpx; letter-spacing: 2rpx; }
+
+.ta {
+  width: 100%;
+  min-height: 300rpx;
+  box-sizing: border-box;
+  background: #FBF3E4;
+  border: 2rpx solid rgba(36, 31, 26, 0.12);
+  border-radius: 22rpx;
+  padding: 26rpx;
+  font-size: 32rpx;
+  line-height: 1.8;
+  margin-top: 10rpx;
+}
+.ta-ph { color: #8C8178; }
+
+.counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 14rpx 4rpx 26rpx;
+  font-size: 24rpx;
+}
+.inspire { color: #574E47; }
+.warn { color: #FF4D3D; font-weight: 700; }
+
+.nick-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0 26rpx;
+  border-top: 1rpx dashed rgba(36, 31, 26, 0.14);
+  margin-top: 10rpx;
+}
+.nick {
+  font-weight: 700;
+  background: rgba(255, 201, 60, 0.3);
+  border-radius: 999rpx;
+  padding: 6rpx 22rpx;
+  margin-left: 16rpx;
+  font-size: 27rpx;
+}
+.roll { margin-left: 14rpx; font-size: 32rpx; }
+
+.acts { display: flex; justify-content: space-between; }
+.half { width: 48%; margin: 0; }
+.tip { margin-top: 24rpx; line-height: 1.6; }
+
+/* 碎纸弹层 */
+.mask {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(30, 25, 20, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  z-index: 99;
+}
+.shred-box {
+  width: 100%;
+  background: #FFFCF6;
+  border-radius: 32rpx;
+  padding: 40rpx 34rpx 34rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
+}
+.shred-paper {
+  background: #FBF3E4;
+  border: 1rpx solid rgba(36, 31, 26, 0.12);
+  border-radius: 20rpx;
+  padding: 28rpx;
+  font-size: 31rpx;
+  line-height: 1.8;
+  word-break: break-word;
+  max-height: 40vh;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+.paper-gone {
+  opacity: 0;
+  transform: scale(0.86) rotate(-3deg);
+  filter: blur(6rpx);
+}
+.shred-q { font-size: 27rpx; color: #574E47; margin: 30rpx 0; line-height: 1.7; }
+.shred-done { font-size: 52rpx; font-weight: 800; text-align: center; margin-top: 20rpx; letter-spacing: 6rpx; }
+.shred-sub { font-size: 27rpx; color: #574E47; text-align: center; margin: 16rpx 0 34rpx; }
