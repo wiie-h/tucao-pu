@@ -223,48 +223,37 @@ function passwordOk(input, expected) {
 
 /* ---------------- 数据库 ---------------- */
 
+/* 注意：D1 的 exec() 会按行拆分 SQL，所以这里把每条语句写成单独一行，逐条执行 */
 var SCHEMA = [
-  'CREATE TABLE IF NOT EXISTS posts (',
-  '  id TEXT PRIMARY KEY, text TEXT NOT NULL, mood TEXT NOT NULL, tags TEXT NOT NULL DEFAULT \'[]\',',
-  '  nickname TEXT NOT NULL, client_id TEXT, ip_hash TEXT, likes INTEGER NOT NULL DEFAULT 0,',
-  '  hidden INTEGER NOT NULL DEFAULT 0, pending INTEGER NOT NULL DEFAULT 0, pinned INTEGER NOT NULL DEFAULT 0,',
-  '  created_at INTEGER NOT NULL)',
-].join('\n') + ';' + [
-  'CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at DESC);',
-  'CREATE INDEX IF NOT EXISTS idx_posts_visible ON posts(hidden, pending, created_at DESC);',
-  'CREATE TABLE IF NOT EXISTS replies (',
-  '  id TEXT PRIMARY KEY, post_id TEXT NOT NULL, text TEXT NOT NULL, nickname TEXT NOT NULL,',
-  '  client_id TEXT, ip_hash TEXT, hidden INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL);',
-  'CREATE INDEX IF NOT EXISTS idx_replies_post ON replies(post_id, created_at);',
-  'CREATE TABLE IF NOT EXISTS likes (',
-  '  post_id TEXT NOT NULL, client_id TEXT NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY (post_id, client_id));',
-  'CREATE INDEX IF NOT EXISTS idx_likes_client ON likes(client_id, created_at DESC);',
-  'CREATE TABLE IF NOT EXISTS shreds (',
-  '  id INTEGER PRIMARY KEY AUTOINCREMENT, client_id TEXT, ip_hash TEXT,',
-  '  chars INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL);',
-  'CREATE INDEX IF NOT EXISTS idx_shreds_created ON shreds(created_at DESC);',
-  'CREATE INDEX IF NOT EXISTS idx_shreds_ip ON shreds(ip_hash, created_at DESC);',
-  'CREATE TABLE IF NOT EXISTS events (',
-  '  id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, path TEXT, title TEXT,',
-  '  client_id TEXT, ip_hash TEXT, ua TEXT, referrer TEXT, lang TEXT, created_at INTEGER NOT NULL);',
-  'CREATE INDEX IF NOT EXISTS idx_events_created ON events(created_at DESC);',
-  'CREATE INDEX IF NOT EXISTS idx_events_type ON events(type, created_at DESC);',
-  'CREATE INDEX IF NOT EXISTS idx_events_ip ON events(ip_hash, type, created_at DESC);',
-  'CREATE TABLE IF NOT EXISTS reports (',
-  '  id INTEGER PRIMARY KEY AUTOINCREMENT, post_id TEXT NOT NULL, reason TEXT,',
-  '  ip_hash TEXT, handled INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL);',
-  'CREATE INDEX IF NOT EXISTS idx_reports_handled ON reports(handled, created_at DESC);',
-  'CREATE TABLE IF NOT EXISTS bans (ip_hash TEXT PRIMARY KEY, reason TEXT, created_at INTEGER NOT NULL);',
-  'CREATE TABLE IF NOT EXISTS presence (client_id TEXT PRIMARY KEY, last_seen INTEGER NOT NULL);',
-  'CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);',
-].join('\n');
+  "CREATE TABLE IF NOT EXISTS posts (id TEXT PRIMARY KEY, text TEXT NOT NULL, mood TEXT NOT NULL, tags TEXT NOT NULL DEFAULT '[]', nickname TEXT NOT NULL, client_id TEXT, ip_hash TEXT, likes INTEGER NOT NULL DEFAULT 0, hidden INTEGER NOT NULL DEFAULT 0, pending INTEGER NOT NULL DEFAULT 0, pinned INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL)",
+  "CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS idx_posts_visible ON posts(hidden, pending, created_at DESC)",
+  "CREATE TABLE IF NOT EXISTS replies (id TEXT PRIMARY KEY, post_id TEXT NOT NULL, text TEXT NOT NULL, nickname TEXT NOT NULL, client_id TEXT, ip_hash TEXT, hidden INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL)",
+  "CREATE INDEX IF NOT EXISTS idx_replies_post ON replies(post_id, created_at)",
+  "CREATE TABLE IF NOT EXISTS likes (post_id TEXT NOT NULL, client_id TEXT NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY (post_id, client_id))",
+  "CREATE INDEX IF NOT EXISTS idx_likes_client ON likes(client_id, created_at DESC)",
+  "CREATE TABLE IF NOT EXISTS shreds (id INTEGER PRIMARY KEY AUTOINCREMENT, client_id TEXT, ip_hash TEXT, chars INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL)",
+  "CREATE INDEX IF NOT EXISTS idx_shreds_created ON shreds(created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS idx_shreds_ip ON shreds(ip_hash, created_at DESC)",
+  "CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, path TEXT, title TEXT, client_id TEXT, ip_hash TEXT, ua TEXT, referrer TEXT, lang TEXT, created_at INTEGER NOT NULL)",
+  "CREATE INDEX IF NOT EXISTS idx_events_created ON events(created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS idx_events_type ON events(type, created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS idx_events_ip ON events(ip_hash, type, created_at DESC)",
+  "CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY AUTOINCREMENT, post_id TEXT NOT NULL, reason TEXT, ip_hash TEXT, handled INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL)",
+  "CREATE INDEX IF NOT EXISTS idx_reports_handled ON reports(handled, created_at DESC)",
+  "CREATE TABLE IF NOT EXISTS bans (ip_hash TEXT PRIMARY KEY, reason TEXT, created_at INTEGER NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS presence (client_id TEXT PRIMARY KEY, last_seen INTEGER NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)"
+];
 
 var schemaDone = null;
 
 function ensureSchema(env) {
   if (!schemaDone) {
     schemaDone = (async function () {
-      await env.DB.exec(SCHEMA);
+      for (var i = 0; i < SCHEMA.length; i++) {
+        await env.DB.prepare(SCHEMA[i]).run();
+      }
       // 首次运行放一条站长自己的欢迎帖（不是假用户，署名就是「站长」）
       await env.DB.prepare(
         'INSERT INTO posts (id,text,mood,tags,nickname,client_id,ip_hash,likes,hidden,pending,pinned,created_at) ' +
@@ -1314,10 +1303,19 @@ async function handle(request, env) {
 
 export default {
   async fetch(request, env, executionCtx) {
-    var res = await handle(request, env);
-    if (request.method === 'HEAD' && res.body) {
-      return new Response(null, { status: res.status, headers: res.headers });
+    try {
+      var res = await handle(request, env);
+      if (request.method === 'HEAD' && res.body) {
+        return new Response(null, { status: res.status, headers: res.headers });
+      }
+      return res;
+    } catch (e) {
+      var msg = (e && e.stack) || (e && e.message) || String(e);
+      console.error('[Worker 未捕获错误]', msg);
+      return new Response(JSON.stringify({ error: '服务器出了点问题。' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }
+      });
     }
-    return res;
   }
 };
